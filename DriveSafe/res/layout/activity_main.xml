@@ -18,6 +18,6 @@
         android:text="ToggleButton"
     	android:textOff="Tap this button to enable driving mode for DRIVEsafe"
     	android:textOn="Tap this button to disable driving mode for DRIVEsafe"
-    	android:onClick="onToggleClick" />
+    	  />
 
 </RelativeLayout>
