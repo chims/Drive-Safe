@@ -6,7 +6,6 @@ public class Notification {
 	private int notificationId;
 	private String notificationType;
 	private String notificationTime;
-	private int sessionId;
 	public int getNotificationId() {
 		return notificationId;
 	}
@@ -25,10 +24,10 @@ public class Notification {
 	public void setNotificationTime(String notificationTime) {
 		this.notificationTime = notificationTime;
 	}
-	public int getSessionId() {
-		return sessionId;
+	@Override
+	public boolean equals(Object o) {
+		// TODO Auto-generated method stub
+		return notificationId == ((Notification)o).getNotificationId();
 	}
-	public void setSessionId(int sessionId) {
-		this.sessionId = sessionId;
-	}	
+	
 }

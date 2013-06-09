@@ -1,11 +1,20 @@
 package edu.cgu.ist380.drivesafe.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Session {
 	private int sessionId;
 	private String sessionStart;
 	private String sessionEnd;
 	private boolean isDriveMode;
+	private List<Notification> notifications;
 	
+	public Session ()
+	{
+		notifications = new ArrayList<Notification>();
+		
+	}
 	public int getSessionId() {
 
 		return sessionId;
@@ -31,4 +40,11 @@ public class Session {
 	public void setDriveMode(boolean isDriveMode) {
 		this.isDriveMode = isDriveMode;
 	}	
+	public List<Notification> getNotifications()
+	{
+		return notifications;
+	}
+	public void addNotification(Notification notifi) {
+		notifications.add(notifi);		
+	}
 }

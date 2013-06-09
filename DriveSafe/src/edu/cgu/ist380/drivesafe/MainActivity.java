@@ -1,16 +1,40 @@
 package edu.cgu.ist380.drivesafe;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 
+	 boolean on;
+	 ToggleButton tButton;
+	 
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		tButton = (ToggleButton) findViewById(R.id.driveSafeToggleButton1);
+		
+		tButton.setOnCheckedChangeListener(new OnCheckedChangeListener (){
+
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean checked) {
+				on = checked;
+				startDrivingMode();
+				
+			}
+
+			private void startDrivingMode() {
+				//do something to start drving mode
+				
+			}
+			
+		});
 	}
 
 	@Override
@@ -20,14 +44,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public void onToggleClicked(View view) {
-	    // Is the toggle on?
-	    boolean on = ((DriveSafeToggleButton1) view).isChecked();
-	    
-	    if (on) {
-	        // Enable vibrate
-	    } else {
-	        // Disable vibrate
-	    }
-	}	
+	 
+	 	
 }
