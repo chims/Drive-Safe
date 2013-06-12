@@ -1,9 +1,11 @@
 package edu.cgu.ist380.drivesafe;
 
 import android.app.Activity;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -11,20 +13,31 @@ import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements OnInitListener{
 
-	 boolean on;
+	 static boolean on;
 	 ToggleButton tButton;
 	 TextToSpeech talker;
 	 String message;
+	 public static MainActivity mThis =null;
+	 static SmsReceiver smsReceiver=  new SmsReceiver();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mThis = this;
+		Bundle extra = this.getIntent().getExtras();
+		//check if smsReceiver passed valueextra.getString("phoneNumber") != null )
+		if(extra != null)
+		{
+			say("You have received a text message from "+ extra.getString("phoneNumber"));
+		}
+		
 		
 		tButton = (ToggleButton) findViewById(R.id.driveSafeToggleButton1);
-		
+		tButton.setChecked(on);
 		tButton.setOnCheckedChangeListener(new OnCheckedChangeListener (){
 
-		 
+		 // register an checked event for the toggle button
 			public void onCheckedChanged(CompoundButton arg0, boolean checked) {
 				on = checked;
 				
@@ -35,14 +48,26 @@ public class MainActivity extends Activity implements OnInitListener{
 				
 			}
 
+			// stop driving mode 
 			private void stopDrivingMode() {
-				say("good bye!");
-				
+			say("good bye!");
+			 try{
+				 // unregister the sms receiver
+				unregisterReceiver(smsReceiver);
+			 }
+			 catch(Exception e)
+			 {
+				 Log.e("SMS","Error " +e.getMessage());
+			 }
 			}
 
 			private void startDrivingMode() {
 				//do something to start driving mode  
 				say("Drive safely!");
+				// register the sms reciver 
+				 registerReceiver(smsReceiver, new IntentFilter(
+				            "android.provider.Telephony.SMS_RECEIVED"));
+				 
 			}
 			
 		});
@@ -67,6 +92,28 @@ public class MainActivity extends Activity implements OnInitListener{
 		talker = new TextToSpeech(this, this);
 
 	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		mThis = null;
+	
+	
+	}
+	
+	@Override 
+	protected void onDestroy()
+	{
+		 try{
+				unregisterReceiver(smsReceiver);
+			 }
+			 catch(Exception e)
+			 {
+				 Log.e("SMS","Error " +e.getMessage());
+			 }
+	}
+	
 	 
 	 	
 }
