@@ -16,6 +16,7 @@ public class MainActivity extends Activity implements OnInitListener{
 	 static boolean on;
 	 ToggleButton tButton;
 	 TextToSpeech talker;
+	 String test;
 	 String message;
 	 public static MainActivity mThis =null;
 	 static SmsReceiver smsReceiver=  new SmsReceiver();

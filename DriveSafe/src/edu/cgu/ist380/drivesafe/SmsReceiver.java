@@ -45,8 +45,9 @@ import android.util.Log;
 	            Intent i = new Intent(context, MainActivity.class);
 	            i.putExtra("phoneNumber",  phonenumber);
 	            i.putExtra("message",  message);
+	            context.startActivity(i);
 	        }
-//	            context.startActivity(i);
+//	           
 	            
 	            
 	         }                         

@@ -29,7 +29,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 				+ SESSION_COLUMN_SESSION_START + " text not null," 
 				+ SESSION_COLUMN_SESSION_END + " text not  null," 
 				+ SESSION_COLUMN_DRIVE_MODE + " text not null"   // no comma after last column
-				+ "); ";		
+				+ ")";		
 		
 		
 		/* Notification Table */
