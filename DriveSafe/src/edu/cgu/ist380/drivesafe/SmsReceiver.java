@@ -1,7 +1,7 @@
 package edu.cgu.ist380.drivesafe;
 
  
-	import android.content.BroadcastReceiver;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.util.Log;
 	        //---get the SMS message passed in---
 	        Bundle bundle = intent.getExtras();        
 	        SmsMessage[] msgs = null;
-	        String str = "";            
+	        // String str = "";            
 	        if (bundle != null)
 	        {
 	        	String phonenumber = null;
@@ -37,7 +37,7 @@ import android.util.Log;
 	            if(MainActivity.mThis != null)
 	            {
 	            	
-	            	MainActivity.mThis.say("You have received a text message from "+phonenumber);
+	            	MainActivity.mThis.say("From S M S Receiver Class. You have received a text message from. "+phonenumber +"."+message);
 	            }
 	            // if not , then start a new activity and pass the values
 	            else

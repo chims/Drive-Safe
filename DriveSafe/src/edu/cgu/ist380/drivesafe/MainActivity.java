@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements OnInitListener{
 		//check if smsReceiver passed valueextra.getString("phoneNumber") != null )
 		if(extra != null)
 		{
-			say("You have received a text message from "+ extra.getString("phoneNumber"));
+			say(" From Main Activity Class. You have received a text message from "+ extra.getString("phoneNumber"));
 		}
 		
 		
@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements OnInitListener{
 
 			// stop driving mode 
 			private void stopDrivingMode() {
-			say("good bye!");
+			say("JUST drive is now disabled. Good bye!");
 			 try{
 				 // unregister the sms receiver
 				unregisterReceiver(smsReceiver);
@@ -64,7 +64,7 @@ public class MainActivity extends Activity implements OnInitListener{
 
 			private void startDrivingMode() {
 				//do something to start driving mode  
-				say("Drive safely!");
+				say("JUST drive is now enabled. Drive safely!");
 				// register the sms reciver 
 				 registerReceiver(smsReceiver, new IntentFilter(
 				            "android.provider.Telephony.SMS_RECEIVED"));
