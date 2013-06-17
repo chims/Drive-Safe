@@ -28,7 +28,7 @@ public class GPSLocationActivity extends Service implements LocationListener
         
                 
     }
-}
+
 /* Class My Location Listener */
 
  class MyLocationListener implements LocationListener{
@@ -51,13 +51,13 @@ loc.getLongitude();
 
 loc.getSpeed();
 
-String Text = "My current location is: " +
+String Text = "My current location and speed is: " +
 
 "\nLatitud = " + loc.getLatitude() +
 
 "\nLongitud = " + loc.getLongitude() +
 
-"\nSpeed = " + loc.getSpeed();
+"\nSpeed = " + ((((loc.getSpeed())/3600)/1000)/1.6093); //get speed in meters/sec and convert to miles/hour
 
  }
 
