@@ -16,6 +16,7 @@ public class MainActivity extends Activity implements OnInitListener{
 	 static boolean on;
 	 ToggleButton tButton;
 	 TextToSpeech talker;
+	 String test;
 	 String message;
 	 public static MainActivity mThis =null;
 	 static SmsReceiver smsReceiver=  new SmsReceiver();
@@ -29,7 +30,7 @@ public class MainActivity extends Activity implements OnInitListener{
 		//check if smsReceiver passed valueextra.getString("phoneNumber") != null )
 		if(extra != null)
 		{
-			say("You have received a text message from "+ extra.getString("phoneNumber"));
+			say(" From Main Activity Class. You have received a text message from "+ extra.getString("phoneNumber"));
 		}
 		
 		
@@ -50,24 +51,50 @@ public class MainActivity extends Activity implements OnInitListener{
 
 			// stop driving mode 
 			private void stopDrivingMode() {
-			say("good bye!");
-			 try{
+			// notify user: stopping drive mode	
+			say("JUST drive is now disabled. Good bye!");
+			
+			// stop listening for SMS receiver  
+			try{
 				 // unregister the sms receiver
-				unregisterReceiver(smsReceiver);
+				unregisterReceiver(smsReceiver);	
 			 }
 			 catch(Exception e)
 			 {
 				 Log.e("SMS","Error " +e.getMessage());
 			 }
 			}
+			
+			// stop listening for e-mail receiver 
+			
+			// stop listening for v-call receiver 
 
+			// stop listening for v-mail receiver 
+			
+			// stop listening for GPS & speed receiver 
+			
+			
+			// start driving mode
 			private void startDrivingMode() {
-				//do something to start driving mode  
-				say("Drive safely!");
-				// register the sms reciver 
+				// notify user: starting driving mode  
+				say("JUST drive is now enabled. Drive safely!");
+				
+				// register the sms reciever 
 				 registerReceiver(smsReceiver, new IntentFilter(
 				            "android.provider.Telephony.SMS_RECEIVED"));
+
+				/*	// register the email reciever 
+				 registerReceiver(smsReceiver, new IntentFilter(
+				            "android.provider.Telephony.SMS_RECEIVED")); */
 				 
+				/*	// register the v-call reciever 
+				 registerReceiver(smsReceiver, new IntentFilter(
+				            "android.provider.Telephony.SMS_RECEIVED")); */
+				 
+					// register the GPS & speed reciever 
+				 registerReceiver(smsReceiver, new IntentFilter(
+				            "android.provider.Telephony.SMS_RECEIVED"));
+				  
 			}
 			
 		});

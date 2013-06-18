@@ -7,17 +7,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/just_drive_red"
     tools:context=".MainActivity" >
 
     <ToggleButton
         android:id="@+id/driveSafeToggleButton1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="ToggleButton"
-    	android:textOff="Tap this button to enable driving mode for DRIVEsafe"
-    	android:textOn="Tap this button to disable driving mode for DRIVEsafe"
-    	  />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textOff="Enable JUSTdrive"
+        android:textOn="Disable JUSTdrive" />
 
 </RelativeLayout>
