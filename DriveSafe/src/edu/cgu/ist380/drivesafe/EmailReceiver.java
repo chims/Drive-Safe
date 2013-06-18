@@ -25,8 +25,8 @@ public class EmailReceiver extends BroadcastReceiver
             Object[] pdus = (Object[]) bundle.get("pdus");
             msgs = new Email[pdus.length];            
             for (int i=0; i<msgs.length; i++){
-                msgs[i] = Email.createFromPdu((byte[])pdus[i]);                
-                senderEmail=  msgs[i].getEmailFrom();                     
+             //   msgs[i] = Email.createFromPdu((byte[])pdus[i]);                
+              //  senderEmail=  msgs[i].getEmailFrom();                     
                
                 emailCounter++;
                       
