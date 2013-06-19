@@ -1,7 +1,23 @@
 package edu.cgu.ist380.drivesafe;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -18,8 +34,12 @@ public class MainActivity extends Activity implements OnInitListener{
 	 TextToSpeech talker;
 	 String test;
 	 String message;
+	  LocationManager mlocManager ;
+      LocationListener mlocListener ;
+	private double currentSpeed;
 	 public static MainActivity mThis =null;
 	 static SmsReceiver smsReceiver=  new SmsReceiver();
+	 static VcallReceiver callReceiver=  new VcallReceiver();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +50,11 @@ public class MainActivity extends Activity implements OnInitListener{
 		//check if smsReceiver passed valueextra.getString("phoneNumber") != null )
 		if(extra != null)
 		{
+			if(extra.getString("phoneNumber") != null)
 			say(" From Main Activity Class. You have received a text message from "+ extra.getString("phoneNumber"));
+			if(extra.getString("callerPhone") !=null)
+		    say(" From Main Activity Class. You have received a phone call  from "+ extra.getString("callerPhone"));
+			
 		}
 		
 		
@@ -43,9 +67,14 @@ public class MainActivity extends Activity implements OnInitListener{
 				on = checked;
 				
 				if(on)
-				startDrivingMode();
+				{
+					startDrivingMode();
+					
+				}
 				else
-				stopDrivingMode();
+				{
+					stopDrivingMode();
+				}
 				
 			}
 
@@ -58,6 +87,7 @@ public class MainActivity extends Activity implements OnInitListener{
 			try{
 				 // unregister the sms receiver
 				unregisterReceiver(smsReceiver);	
+				unregisterReceiver(callReceiver);
 			 }
 			 catch(Exception e)
 			 {
@@ -79,9 +109,15 @@ public class MainActivity extends Activity implements OnInitListener{
 				// notify user: starting driving mode  
 				say("JUST drive is now enabled. Drive safely!");
 				
+				    getApplicationContext();
+					mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                    mlocListener = new GPSLocationListener( );
+            	    mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 20000, 0, mlocListener);
 				// register the sms reciever 
 				 registerReceiver(smsReceiver, new IntentFilter(
 				            "android.provider.Telephony.SMS_RECEIVED"));
+				 
+				 registerReceiver(callReceiver, new IntentFilter("android.intent.action.PHONE_STATE") );
 
 				/*	// register the email reciever 
 				 registerReceiver(smsReceiver, new IntentFilter(
@@ -92,8 +128,8 @@ public class MainActivity extends Activity implements OnInitListener{
 				            "android.provider.Telephony.SMS_RECEIVED")); */
 				 
 					// register the GPS & speed reciever 
-				 registerReceiver(smsReceiver, new IntentFilter(
-				            "android.provider.Telephony.SMS_RECEIVED"));
+//				 registerReceiver(smsReceiver, new IntentFilter(
+//				            "android.provider.Telephony.SMS_RECEIVED"));
 				  
 			}
 			
@@ -132,6 +168,7 @@ public class MainActivity extends Activity implements OnInitListener{
 	@Override 
 	protected void onDestroy()
 	{
+		 super.onDestroy();
 		 try{
 				unregisterReceiver(smsReceiver);
 			 }
@@ -139,8 +176,103 @@ public class MainActivity extends Activity implements OnInitListener{
 			 {
 				 Log.e("SMS","Error " +e.getMessage());
 			 }
+		
 	}
+	private void startWebServiceCall(double lat, double lng)
+	{
+		CallGPSServerTask task = new CallGPSServerTask(); // call service in a separate thread 
+		Log.d("url", "http://134.173.236.80:6080/arcgis/rest/services/socal_roads_speed/MapServer/0/query?where=&text=&objectIds=&time=&geometry="+lng+"%2C"+lat+"&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=speed&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=json");
+	    task.execute("http://134.173.236.80:6080/arcgis/rest/services/socal_roads_speed/MapServer/0/query?where=&text=&objectIds=&time=&geometry="+lng+"%2C"+lat+"&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=speed&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=json");
+	 }
 	
+	  
+
+	  class GPSLocationListener   implements LocationListener
+	{
+	          
+
+				@Override
+				public void onLocationChanged(Location loc) {
+					// TODO Auto-generated method stub
+					startWebServiceCall(loc.getLatitude(),loc.getLongitude());
+					currentSpeed = loc.getSpeed();
+					 
+				}
+
+				@Override
+				public void onProviderDisabled(String arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onProviderEnabled(String arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+
+			 
+	        
+	                
+	    }
+
+	  private class CallGPSServerTask extends AsyncTask<String, Void, String> {
+		  String response = "";
+		@Override
+		protected String doInBackground(String... arg0) {
+			 
+		      for (String url : arg0) {
+		        DefaultHttpClient client = new DefaultHttpClient();
+		        HttpGet httpGet = new HttpGet(url);
+		        try {
+		          HttpResponse execute = client.execute(httpGet);
+		          InputStream content = execute.getEntity().getContent();
+
+		          BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+		          String s = "";
+		          while ((s = buffer.readLine()) != null) {
+		            response += s;
+		          }
+
+		        } catch (Exception e) {
+		          e.printStackTrace();
+		        }
+		      }
+		      return response;
+			 }
+		@Override
+		protected void onPostExecute(String result) {
+			 try {
+				JSONObject jsonObject = new JSONObject(result);
+				JSONArray fields = jsonObject.getJSONArray("features"); 
+				Log.d("JSON", fields.toString());
+				String speed = null;
+				if(fields.length() > 0)
+				speed =fields.getJSONObject(0).getJSONObject("attributes").getString("speed");
+				else
+					speed = "0";
+				CompareSpeed(speed);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			super.onPostExecute(result);
+		}
+		
 	 
-	 	
+	  }
+
+	public void CompareSpeed(String speed) {
+		 double sp = Double.parseDouble(speed);
+		 currentSpeed = 40;
+		 if (sp <= currentSpeed)
+			 say("You are speeding up");
+		
+	}
 }
