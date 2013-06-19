@@ -146,7 +146,7 @@ public class MainActivity extends Activity implements OnInitListener{
 	public void onInit(int arg0) {
 		// TODO Auto-generated method stub
 		if (message != null)
-			talker.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+			talker.speak(message, TextToSpeech.QUEUE_ADD, null);
 
 	}
 
@@ -171,6 +171,7 @@ public class MainActivity extends Activity implements OnInitListener{
 		 super.onDestroy();
 		 try{
 				unregisterReceiver(smsReceiver);
+				unregisterReceiver(callReceiver);
 			 }
 			 catch(Exception e)
 			 {
