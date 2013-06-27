@@ -32,7 +32,7 @@ public class VcallReceiver extends BroadcastReceiver
             if(MainActivity.mThis != null)
             {
             	
-            	MainActivity.mThis.say("From Vcall Receiver Class. You have received a voice call from. "+callerPhone +"." + "You have." +vcallCounter +  "new calls");
+            	MainActivity.mThis.say("You have received a voice call from. "+callerPhone);
             }
             // if not , then start a new activity and pass the values
             else

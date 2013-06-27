@@ -51,9 +51,9 @@ public class MainActivity extends Activity implements OnInitListener{
 		if(extra != null)
 		{
 			if(extra.getString("phoneNumber") != null)
-			say(" From Main Activity Class. You have received a text message from "+ extra.getString("phoneNumber"));
+			say("You have received a text message from "+ extra.getString("phoneNumber"));
 			if(extra.getString("callerPhone") !=null)
-		    say(" From Main Activity Class. You have received a phone call  from "+ extra.getString("callerPhone"));
+		    say("You have received a phone call  from "+ extra.getString("callerPhone"));
 			
 		}
 		
@@ -273,7 +273,12 @@ public class MainActivity extends Activity implements OnInitListener{
 		 double sp = Double.parseDouble(speed);
 		 currentSpeed = 40;
 		 if (sp <= currentSpeed)
-			 say("You are speeding up");
-		
+		 {
+			 say("Please, slow down. The speed limit is" + sp + "miles per hour");
+		 }
+		 else
+		 {
+		 	 say("Please, pick up speed. The speed limit is" + sp + "miles per hour");
+		 }
 	}
 }

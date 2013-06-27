@@ -37,7 +37,7 @@ import android.util.Log;
 	            if(MainActivity.mThis != null)
 	            {
 	            	
-	            	MainActivity.mThis.say("From S M S Receiver Class. You have received a text message from. "+phonenumber +"."+message);
+	            	MainActivity.mThis.say("You have received a text message from. "+phonenumber +"."+message);
 	            }
 	            // if not , then start a new activity and pass the values
 	            else
