@@ -17,7 +17,6 @@ import android.util.Log;
 	        //---get the SMS message passed in---
 	        Bundle bundle = intent.getExtras();        
 	        SmsMessage[] msgs = null;
-	        // String str = "";            
 	        if (bundle != null)
 	        {
 	        	String phonenumber = null;
@@ -37,7 +36,7 @@ import android.util.Log;
 	            if(MainActivity.mThis != null)
 	            {
 	            	
-	            	MainActivity.mThis.say("You have received a text message from. "+phonenumber +"."+message);
+	            	MainActivity.mThis.say("From S.M.S. Activity.  You have received a text message from. "+ phonenumber + "." + message);
 	            }
 	            // if not , then start a new activity and pass the values
 	            else

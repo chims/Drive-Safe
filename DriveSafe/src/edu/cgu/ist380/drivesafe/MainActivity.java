@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements OnInitListener{
 	 public static MainActivity mThis =null;
 	 static SmsReceiver smsReceiver=  new SmsReceiver();
 	 static VcallReceiver callReceiver=  new VcallReceiver();
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,9 @@ public class MainActivity extends Activity implements OnInitListener{
 		if(extra != null)
 		{
 			if(extra.getString("phoneNumber") != null)
-			say("You have received a text message from "+ extra.getString("phoneNumber"));
+			say("From Main Activity. You have received a text message from "+ extra.getString("phoneNumber") + "." + extra.getString("message"));
 			if(extra.getString("callerPhone") !=null)
-		    say("You have received a phone call  from "+ extra.getString("callerPhone"));
+		    say("From Main Activity. You have received a phone call  from "+ extra.getString("callerPhone"));
 			
 		}
 		
@@ -68,8 +70,7 @@ public class MainActivity extends Activity implements OnInitListener{
 				
 				if(on)
 				{
-					startDrivingMode();
-					
+					startDrivingMode();					
 				}
 				else
 				{
@@ -80,8 +81,11 @@ public class MainActivity extends Activity implements OnInitListener{
 
 			// stop driving mode 
 			private void stopDrivingMode() {
-			// notify user: stopping drive mode	
-			say("JUST drive is now disabled. Good bye!");
+				//Switch ringer to Normal mode
+				 AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+				// notify user: stopping drive mode	
+				say("JUST drive is now disabled. Good bye!");
 			
 			// stop listening for SMS receiver  
 			try{
@@ -93,21 +97,14 @@ public class MainActivity extends Activity implements OnInitListener{
 			 {
 				 Log.e("SMS","Error " +e.getMessage());
 			 }
-			}
-			
-			// stop listening for e-mail receiver 
-			
-			// stop listening for v-call receiver 
-
-			// stop listening for v-mail receiver 
-			
-			// stop listening for GPS & speed receiver 
-			
-			
+			}					
 			// start driving mode
 			private void startDrivingMode() {
+				//Switch ringer into Silent mode
+				 AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 				// notify user: starting driving mode  
-				say("JUST drive is now enabled. Drive safely!");
+				say("JUST drive is now enabled. Please. Pull over if you need to use your phone. Drive safely!");
 				
 				    getApplicationContext();
 					mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -271,7 +268,7 @@ public class MainActivity extends Activity implements OnInitListener{
 
 	public void CompareSpeed(String speed) {
 		 double sp = Double.parseDouble(speed);
-		 currentSpeed = 40;
+		currentSpeed = 40;
 		 if (sp <= currentSpeed)
 		 {
 			 say("Please, slow down. The speed limit is" + sp + "miles per hour");
