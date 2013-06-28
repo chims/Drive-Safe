@@ -35,10 +35,11 @@ public class MainActivity extends Activity implements OnInitListener{
 	 TextToSpeech talker;
 	 String test;
 	 String message;
-	  LocationManager mlocManager ;
-      LocationListener mlocListener ;
-	private double currentSpeed;
+	 LocationManager mlocManager ;
+     LocationListener mlocListener ;
+	 private double currentSpeed;
 	 public static MainActivity mThis =null;
+
 	 static SmsReceiver smsReceiver=  new SmsReceiver();
 	 static VcallReceiver callReceiver=  new VcallReceiver();
 
@@ -52,11 +53,10 @@ public class MainActivity extends Activity implements OnInitListener{
 		//check if smsReceiver passed valueextra.getString("phoneNumber") != null )
 		if(extra != null)
 		{
-			if(extra.getString("phoneNumber") != null)
-			say("From Main Activity. You have received a text message from "+ extra.getString("phoneNumber") + "." + extra.getString("message"));
+			if(extra.getString("phoneNumberRevised") != null)
+			say("From Main Activity. You have received a text message from "+ extra.getString("phoneNumberRevised") + "." + extra.getString("message"));
 			if(extra.getString("callerPhone") !=null)
-		    say("From Main Activity. You have received a phone call  from "+ extra.getString("callerPhone"));
-			
+		    say("From Main Activity. You have received a phone call  from "+ extra.getString("callerPhoneRevised"));
 		}
 		
 		
@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements OnInitListener{
 			// stop driving mode 
 			private void stopDrivingMode() {
 				//Switch ringer to Normal mode
-				 AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+		    	AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 				// notify user: stopping drive mode	
 				say("JUST drive is now disabled. Good bye!");
@@ -116,18 +116,6 @@ public class MainActivity extends Activity implements OnInitListener{
 				 
 				 registerReceiver(callReceiver, new IntentFilter("android.intent.action.PHONE_STATE") );
 
-				/*	// register the email reciever 
-				 registerReceiver(smsReceiver, new IntentFilter(
-				            "android.provider.Telephony.SMS_RECEIVED")); */
-				 
-				/*	// register the v-call reciever 
-				 registerReceiver(smsReceiver, new IntentFilter(
-				            "android.provider.Telephony.SMS_RECEIVED")); */
-				 
-					// register the GPS & speed reciever 
-//				 registerReceiver(smsReceiver, new IntentFilter(
-//				            "android.provider.Telephony.SMS_RECEIVED"));
-				  
 			}
 			
 		});
