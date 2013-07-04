@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,12 +21,14 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements OnInitListener{
@@ -39,6 +42,7 @@ public class MainActivity extends Activity implements OnInitListener{
      LocationListener mlocListener ;
 	 private double currentSpeed;
 	 public static MainActivity mThis =null;
+
 
 	 static SmsReceiver smsReceiver=  new SmsReceiver();
 	 static VcallReceiver callReceiver=  new VcallReceiver();
@@ -85,7 +89,10 @@ public class MainActivity extends Activity implements OnInitListener{
 		    	AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 				
-				//Turn off GPS function for the phone
+				//Remind user to Turn off GPS function for the phone & pop-up GPS Settings
+				Toast.makeText(getApplicationContext(), "PLEASE turn OFF GPS to conserve BATTERY \nGO TO SETTINGS, under Location Services \nSET Access to my Location = OFF ", Toast.LENGTH_LONG).show();
+			    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mThis.startActivity(intent) */			
 				
 				// notify user: stopping drive mode	
 				say("JUST drive is now disabled. Thank you for driving safely today. . . Good bye!");
@@ -107,8 +114,11 @@ public class MainActivity extends Activity implements OnInitListener{
 				 AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 				
-				//Turn on GPS Tracking for the phone
-				
+				//Remind user to Turn on GPS function for the phone & pop-up GPS settings
+				Toast.makeText(getApplicationContext(), "PLEASE turn ON GPS to start GPS Tracking -  \nGO TO SETTINGS, under Location Services \nSET Accessto my Location = ON ", Toast.LENGTH_LONG).show();
+			    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mThis.startActivity(intent); */
+
 				
 				// notify user: starting driving mode  
 				say("JUST drive is now enabled. . Please. .  Pull over if you need to use your phone. . . Drive safely!");
@@ -254,8 +264,7 @@ public class MainActivity extends Activity implements OnInitListener{
 			}
 			super.onPostExecute(result);
 		}
-		
-	 
+		 
 	  }
 
 	public void CompareSpeed(String speed) {
