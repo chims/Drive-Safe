@@ -54,9 +54,9 @@ public class MainActivity extends Activity implements OnInitListener{
 		if(extra != null)
 		{
 			if(extra.getString("phoneNumberRevised") != null)
-			say("From Main Activity. You have received a text message from "+ extra.getString("phoneNumberRevised") + "." + extra.getString("message"));
+			say("You have received a text message from. "+ extra.getString("phoneNumberRevised") + " ." + extra.getString("message") + " ." + "powered by Just drive");
 			if(extra.getString("callerPhone") !=null)
-		    say("From Main Activity. You have received a phone call  from "+ extra.getString("callerPhoneRevised"));
+		    say("You have received a phone call  from. "+ extra.getString("callerPhoneRevised") + " ." + "powered by Just drive");
 		}
 		
 		
@@ -84,8 +84,11 @@ public class MainActivity extends Activity implements OnInitListener{
 				//Switch ringer to Normal mode
 		    	AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+				
+				//Turn off GPS function for the phone
+				
 				// notify user: stopping drive mode	
-				say("JUST drive is now disabled. Good bye!");
+				say("JUST drive is now disabled. Thank you for driving safely today. . . Good bye!");
 			
 			// stop listening for SMS receiver  
 			try{
@@ -103,13 +106,17 @@ public class MainActivity extends Activity implements OnInitListener{
 				//Switch ringer into Silent mode
 				 AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+				
+				//Turn on GPS Tracking for the phone
+				
+				
 				// notify user: starting driving mode  
-				say("JUST drive is now enabled. Please. Pull over if you need to use your phone. Drive safely!");
+				say("JUST drive is now enabled. . Please. .  Pull over if you need to use your phone. . . Drive safely!");
 				
 				    getApplicationContext();
 					mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                     mlocListener = new GPSLocationListener( );
-            	    mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 20000, 0, mlocListener);
+            	    mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 60000, 0, mlocListener);
 				// register the sms reciever 
 				 registerReceiver(smsReceiver, new IntentFilter(
 				            "android.provider.Telephony.SMS_RECEIVED"));
@@ -202,10 +209,7 @@ public class MainActivity extends Activity implements OnInitListener{
 					// TODO Auto-generated method stub
 					
 				}
-
-			 
-	        
-	                
+				
 	    }
 
 	  private class CallGPSServerTask extends AsyncTask<String, Void, String> {
@@ -240,7 +244,7 @@ public class MainActivity extends Activity implements OnInitListener{
 				Log.d("JSON", fields.toString());
 				String speed = null;
 				if(fields.length() > 0)
-				speed =fields.getJSONObject(0).getJSONObject("attributes").getString("speed");
+				speed =fields.getJSONObject(0).getJSONObject("attributes").getString("speed"); //.substring(1, 3); //---Get int(speed)
 				else
 					speed = "0";
 				CompareSpeed(speed);
@@ -255,15 +259,54 @@ public class MainActivity extends Activity implements OnInitListener{
 	  }
 
 	public void CompareSpeed(String speed) {
-		 double sp = Double.parseDouble(speed);
-		currentSpeed = 40;
-		 if (sp <= currentSpeed)
+		 double speedLimit = (int)(Double.parseDouble(speed));
+		 //---Convert speed from meters/seconds to miles/hour if driver's car is moving---
+		 if (currentSpeed > 0) 
+		currentSpeed = (int)((currentSpeed*3600)/1000)/1.609034;
+		 //---If a positive speed limit was retrieved from web service ---
+		if (speedLimit > 0)
+		{
+	     //---and if driver is driving over speed limit - i.e. at least 5 miles above speed limit...
+		 if (currentSpeed > speedLimit + 5)
+			 say("Please. reduce your speed. . The speed limit is." + speedLimit + " ." + "miles per hour");
+		 
+		 //---but if driver is driving under speed limit - i.e. at least 5 miles below speed limit...
+		 if (currentSpeed < speedLimit - 5)
 		 {
-			 say("Please, slow down. The speed limit is" + sp + "miles per hour");
+			 //---and speed limit is higher than 25mph
+			 if (speedLimit > 25)
+			 {
+				 //---and driver's current speed is above 20mph
+				 if (currentSpeed > 20)	 
+					 say("Please. increase your speed. . The speed limit is." + speedLimit + " ." + "miles per hour");
+
+				 //---but if driver's speed limit = 0-20mph; driver possibly in traffic/@traffic-light/@stop-sign!
+				 
+			 }
+			 //---and speed limit is 25mph; presumably the lowest possible speed limit
+			 else
+			 {
+				 //---and driver's current speed is above 15mph
+				 if (currentSpeed > 15)
+					 say("Please. increase your speed. . The speed limit is." + speedLimit + " ." + "miles per hour");
+	
+				 //---but if driver's speed limit =< 20mph; driver possibly in traffic/@traffic-light/@stop-sign!				 
+			 }
+				 
 		 }
-		 else
-		 {
-		 	 say("Please, pick up speed. The speed limit is" + sp + "miles per hour");
-		 }
+		
+		}
+		//---If no speed limit is obtained from web service i.e. speed limit = 0mph 
+		else
+		{
+			//---but driver is moving...
+			if (currentSpeed > 3)
+				say("Speed limit is NOT available at the moment. . Your current speed is." + (int)(currentSpeed) + " ." + "miles per hour");
+
+			//---and driver is stationary... NOTE: Only included here for the purpose of testing - TO BE Remarked.
+			if (currentSpeed < 3)
+				say("Speed limit is NOT available at the moment. . No motor vehicle motion currently detected." + (int)(currentSpeed) + "mph");
+		}
+				
 	}
 }

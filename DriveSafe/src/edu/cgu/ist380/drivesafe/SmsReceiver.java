@@ -39,7 +39,7 @@ import android.util.Log;
 	            if(MainActivity.mThis != null)
 	            {
 	            	
-	            	MainActivity.mThis.say("From S.M.S. Activity.  You have received a text message from. "+ phoneNumberRevised);
+	            	MainActivity.mThis.say("S.M.S. Activity.  You have received a text message from. " + phoneNumberRevised + " ." + message + " ." + "powered by Just drive");
 	            }
 	            // if not , then start a new activity and pass the values
 	            else

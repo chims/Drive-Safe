@@ -9,7 +9,7 @@ import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class VcallReceiver extends BroadcastReceiver
+public class VcallReceiver extends  BroadcastReceiver 
 {
     @Override
     public void onReceive(Context context, Intent intent) 
@@ -23,6 +23,8 @@ public class VcallReceiver extends BroadcastReceiver
         
         if (bundle != null)
         {
+        	 //---Code to AUTOMATICALLY block ANY incoming call---
+        		
              //---Code to retrieve the new voice call received---
                 callerPhone=  bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);                     
                
@@ -36,7 +38,7 @@ public class VcallReceiver extends BroadcastReceiver
             if(MainActivity.mThis != null)
             {
             	
-            	MainActivity.mThis.say("From Voice Call Activity. You have received a voice call from. "+callerPhoneRevised);
+            	MainActivity.mThis.say("Voice Call Activity. You have received a voice call from. " + callerPhoneRevised + " ." + "powered by Just drive");
             }
             // if not , then start a new activity and pass the values
             else
