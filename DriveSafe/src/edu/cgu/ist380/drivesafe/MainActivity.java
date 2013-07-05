@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements OnInitListener{
 				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 				
 				//Remind user to Turn on GPS function for the phone & pop-up GPS settings
-				Toast.makeText(getApplicationContext(), "PLEASE turn ON GPS to start GPS Tracking   \nSETTINGS | Location Services \nSet Accessto my Location ON ", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "PLEASE turn ON GPS to start GPS Tracking   \nSETTINGS | Location Services \nSet Access to my Location ON ", Toast.LENGTH_LONG).show();
 			    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mThis.startActivity(intent); */
 
