@@ -90,12 +90,12 @@ public class MainActivity extends Activity implements OnInitListener{
 				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 				
 				//Remind user to Turn off GPS function for the phone & pop-up GPS Settings
-				Toast.makeText(getApplicationContext(), "PLEASE turn OFF GPS to conserve BATTERY \nGO TO SETTINGS, under Location Services \nSET Access to my Location = OFF ", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "PLEASE turn OFF GPS to conserve BATTERY \nSETTINGS | Location Services \nSet Access to my Location OFF ", Toast.LENGTH_LONG).show();
 			    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mThis.startActivity(intent) */			
 				
 				// notify user: stopping drive mode	
-				say("JUST drive is now disabled. Thank you for driving safely today. . . Good bye!");
+				say("JUST drive is now disabled. . Please. . Turn OFF GPS to conserve Battery. . Good bye!");
 			
 			// stop listening for SMS receiver  
 			try{
@@ -115,19 +115,19 @@ public class MainActivity extends Activity implements OnInitListener{
 				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 				
 				//Remind user to Turn on GPS function for the phone & pop-up GPS settings
-				Toast.makeText(getApplicationContext(), "PLEASE turn ON GPS to start GPS Tracking -  \nGO TO SETTINGS, under Location Services \nSET Accessto my Location = ON ", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "PLEASE turn ON GPS to start GPS Tracking   \nSETTINGS | Location Services \nSet Accessto my Location ON ", Toast.LENGTH_LONG).show();
 			    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mThis.startActivity(intent); */
 
 				
 				// notify user: starting driving mode  
-				say("JUST drive is now enabled. . Please. .  Pull over if you need to use your phone. . . Drive safely!");
+				say("JUST drive is now enabled. . Please. .  Turn ON GPS NOW! . . Drive safely!");
 				
 				    getApplicationContext();
 					mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                     mlocListener = new GPSLocationListener( );
             	    mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 60000, 0, mlocListener);
-				// register the sms reciever 
+				// register the SMS Receiver 
 				 registerReceiver(smsReceiver, new IntentFilter(
 				            "android.provider.Telephony.SMS_RECEIVED"));
 				 
@@ -271,7 +271,7 @@ public class MainActivity extends Activity implements OnInitListener{
 		 double speedLimit = (int)(Double.parseDouble(speed));
 		 //---Convert speed from meters/seconds to miles/hour if driver's car is moving---
 		 if (currentSpeed > 0) 
-		currentSpeed = (int)((currentSpeed*3600)/1000)/1.609034;
+		currentSpeed = (int)(((currentSpeed*3600)/1000)/1.609034);
 		 //---If a positive speed limit was retrieved from web service ---
 		if (speedLimit > 0)
 		{
@@ -309,12 +309,12 @@ public class MainActivity extends Activity implements OnInitListener{
 		else
 		{
 			//---but driver is moving...
-			if (currentSpeed > 3)
+			if (currentSpeed > 20)
 				say("Speed limit is NOT available at the moment. . Your current speed is." + (int)(currentSpeed) + " ." + "miles per hour");
 
 			//---and driver is stationary... NOTE: Only included here for the purpose of testing - TO BE Remarked.
 			if (currentSpeed < 3)
-				say("Speed limit is NOT available at the moment. . No motor vehicle motion currently detected." + (int)(currentSpeed) + "mph");
+				say("Speed limit is NOT available at the moment. . No motor vehicle motion currently detected."); // + (int)(currentSpeed) + "mph");
 		}
 				
 	}
